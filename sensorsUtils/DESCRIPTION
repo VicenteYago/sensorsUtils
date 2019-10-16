@@ -1,0 +1,13 @@
+Package: sensorsUtils
+Type: Package
+Title: SensorUtils
+Version: 0.1.0
+Author: Jose Vicente Yago Martinez
+Maintainer: The package maintainer <josevicente.yago@um.es>
+Description: Common operations for sensor data
+License: Proprietary
+Imports:
+    plyr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
