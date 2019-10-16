@@ -1,0 +1,74 @@
+* using log directory ‘/Users/vicenteyago/Desktop/sensorsUtils/sensorsUtils.Rcheck’
+* using R version 3.5.3 (2019-03-11)
+* using platform: x86_64-apple-darwin15.6.0 (64-bit)
+* using session charset: UTF-8
+* using options ‘--no-manual --as-cran’
+* checking for file ‘sensorsUtils/DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘sensorsUtils’ version ‘0.1.0’
+* package encoding: UTF-8
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking serialization versions ... OK
+* checking whether package ‘sensorsUtils’ can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... WARNING
+Non-standard license specification:
+  Proprietary
+Standardizable: FALSE
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking examples ... ERROR
+Running examples in ‘sensorsUtils-Ex.R’ failed
+The error most likely occurred in:
+
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: fortify.df
+> ### Title: Create a fortified dataframe.
+> ### Aliases: fortify.df
+> 
+> ### ** Examples
+> 
+> start <- as.POSIXct("2019/01/01")
+> end   <- as.POSIXct("2019/01/02")
+> dates <- seq(start, end, by = "hour")
+> df <- data.frame(dates = dates[-(sample(1:25,5))], values=rep(1,20))
+> fortify.df(dfList=list(df), fInterval=c(start, end), by="hour", names = c("myValue"))
+Error in fortify.df(dfList = list(df), fInterval = c(start, end), by = "hour",  : 
+  could not find function "fortify.df"
+Execution halted
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘testthat.R’
+* DONE
+Status: 1 ERROR, 1 WARNING

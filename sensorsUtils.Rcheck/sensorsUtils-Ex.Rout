@@ -1,0 +1,59 @@
+
+R version 3.5.3 (2019-03-11) -- "Great Truth"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "sensorsUtils"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> base::assign(".ExTimings", "sensorsUtils-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('sensorsUtils')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("fortify.df")
+> ### * fortify.df
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: fortify.df
+> ### Title: Create a fortified dataframe.
+> ### Aliases: fortify.df
+> 
+> ### ** Examples
+> 
+> start <- as.POSIXct("2019/01/01")
+> end   <- as.POSIXct("2019/01/02")
+> dates <- seq(start, end, by = "hour")
+> df <- data.frame(dates = dates[-(sample(1:25,5))], values=rep(1,20))
+> fortify.df(dfList=list(df), fInterval=c(start, end), by="hour", names = c("myValue"))
+Error in fortify.df(dfList = list(df), fInterval = c(start, end), by = "hour",  : 
+  could not find function "fortify.df"
+Execution halted

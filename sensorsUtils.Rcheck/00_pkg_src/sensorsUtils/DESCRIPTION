@@ -7,11 +7,10 @@ Maintainer: The package maintainer <josevicente.yago@um.es>
 Description: Common operations for sensor data like make explicit silent lost values in a dataframe,
              Set multiple interpolations into a dataframe or agregate data by a time range for compresion.
 License: Proprietary
-Imports:
-    utils,
-    magrittr
+Imports: utils, magrittr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Suggests: 
-    testthat
+Suggests: testthat
+NeedsCompilation: no
+Packaged: 2019-10-16 19:25:19 UTC; vicenteyago
