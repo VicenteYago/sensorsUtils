@@ -1,3 +1,5 @@
+compress.col            Compress dataframe
 fortify.col             Create a fortified simply dataframe with two
                         columns: date and value.
-fortify.df              Create a fortified dataframe.
+fortify_df              Create a fortified dataframe.
+make.aggregation        Aggregate dataframe with a function.

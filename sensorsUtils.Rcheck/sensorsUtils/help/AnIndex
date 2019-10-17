@@ -1,2 +1,4 @@
+compress.col	compress.col
 fortify.col	fortify.col
-fortify.df	fortify.df
+fortify_df	fortify_df
+make.aggregation	make.aggregation

@@ -19,10 +19,10 @@ Type 'q()' to quit R.
 > library(sensorsUtils)
 > 
 > test_check("sensorsUtils")
-══ testthat results  ══════════════════════════
+══ testthat results  ═══════════════════════════════════════════
 [ OK: 3 | SKIPPED: 0 | WARNINGS: 0 | FAILED: 0 ]
 > 
 > 
 > proc.time()
    user  system elapsed 
-  0.511   0.095   0.592 
+  0.458   0.078   0.521 

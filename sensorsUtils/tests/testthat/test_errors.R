@@ -5,7 +5,7 @@ test_that("basic test", {
   end   <- as.POSIXct("2019/01/02")
   dates <- seq(start, end, by = "hour")
   df <- data.frame(dates = dates, values = 1:25)
-  res <-fortify.df(dfList = list(df), by = "hour", names = "values")
+  res <-fortify_df(df = list(df), by = "hour", names = "values")
   expect_equal(res, df)
 })
 
@@ -15,13 +15,13 @@ test_that("basic test2", {
   end   <- as.POSIXct("2019/01/02")
   dates <- seq(start, end, by = "hour")
   df <- data.frame(dates = dates, values = 1:25)
-  res <-fortify.df(dfList = list(df),
+  res <-fortify_df(df = list(df),
                    fInterval = c(start, as.POSIXct("2019/01/01 12:00:00")),
                    by = "hour", names = "values")
   expect_equal(res, df[1:13,])
 })
 
-#Check that multiple dataframe fortifications works well
+#Check that multiple dataframe list fortifications works well
 test_that("basic test3", {
   start <- as.POSIXct("2019/01/01")
   end   <- as.POSIXct("2019/01/02")
@@ -37,7 +37,7 @@ test_that("basic test3", {
   df.C<-df.C[-(sample(1:25,5)),]
   df.D<-df.D[-(sample(1:25,5)),]
 
-  res <-fortify.df(dfList = list(df.A, df.B, df.C, df.D),
+  res <-fortify_df(df = list(df.A, df.B, df.C, df.D),
                    fInterval = c(start, end),
                    by = "hour", names = c("A","B","C","D"))
   expect_equal(25, nrow(res))

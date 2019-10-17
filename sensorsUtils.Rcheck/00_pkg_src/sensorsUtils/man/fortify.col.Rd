@@ -4,7 +4,7 @@
 \alias{fortify.col}
 \title{Create a fortified simply dataframe with two columns: date and value.}
 \usage{
-\method{fortify}{col}(df, fInterval = NULL, by)
+fortify.col(df, fInterval = NULL, by)
 }
 \arguments{
 \item{df}{dataframe with a column "dates" in POSIXct format an another column with any value type.}
