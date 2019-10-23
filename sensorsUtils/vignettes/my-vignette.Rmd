@@ -1,0 +1,133 @@
+---
+title: "my-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{my-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(sensorsUtils)
+```
+
+
+## PERDIDAS SILENCIOSAS
+
+Uno de los problemas mas frecuentes al tratar con sensores es la perdida de información.
+En muchas situaciones los observaciones perdidas no son indicadas de forma explicita en los datasets, es decir no existen NAs, a este fenomeno lo llamo "perdidas silenciosas".
+
+El primer paso para arreglar la información y tratar con ella es forzar la aparicion de las perdidas sileciosas, este el papel de la función *fortify_df*:
+
+```{r}
+fA <- as.POSIXct("2019/01/01")
+fB <- as.POSIXct("2019/01/02")
+
+#fake dataframe
+dates = seq(fA, fB, by = "hour")
+
+#provocar perdidas silenciosas
+df <- data.frame(dates = dates[-(sample(1:25,10))], A = 1:15, B = LETTERS[1:15], C = rnorm(15))
+df
+```
+
+Hemos creado un dataframe ficticio con observaciones horarias de un fenomeno cualquiera. Y hemos forzado la perdida silenciosa de 5 observaciones, en posiciones aleatorias.
+
+```{r}
+df.fortified<-fortify_df(df, by = "hour")
+df.fortified
+```
+
+
+Por defecto la función indica las observaciones perdidas entre la primera y la última fecha, 
+esto puede suponer un problema si las perdidas silenciosas afectan a la ultima observación. Por este motivo se puede espeficificar de forma manual el intervalo para el cual se quieren especificar todas las observaciones perdidias:
+
+```{r}
+df.fortified<-fortify_df(df,c(fA,fB), by = "hour")
+df.fortified
+```
+
+
+
+'fortify_df' tambien funciona para unificar multiples dataframes univariables en uno comun, 
+el problema de esta operacion es que no todos los sub-dataframes tiene porque empezar y finalizar
+en las mismas fechas, ademas de que cada uno tenga sus propias perdidas silenciosas, todo esto 
+provoca que existan diferentes numeros de filas, y por lo tanto no se pueda realizar una unión 
+directa de estos subdataframes. Por ejemplo:
+
+```{r}
+df.A <- data.frame(dates = dates[-(sample(1:25,5))], A = LETTERS[1:20])
+df.B <- data.frame(dates = dates[-(sample(1:25,3))], B = 1:22)
+df.C <- data.frame(dates = dates[-(sample(1:25,7))], C = rnorm(18))
+
+fortify_df(list(df.A, df.B, df.C), by = "hour")
+```
+
+
+
+## AGREGACION PRECISA
+
+```{r}
+fA <- as.POSIXct("2019/01/01")
+fB <- as.POSIXct("2019/01/02")
+library(forecast)
+
+n = 24*10
+data.frame(time = seq(fA, by = "1 hour", length.out = n),
+           A = cumsum(sample(c(-1, 1), n, TRUE)),
+           B = cumsum(sample(c(-1, 1), n, TRUE)) ) -> df
+
+ggplot(df)+
+  geom_line(aes(x = time, y = A, color = "A"))+
+  geom_line(aes(x = time, y = B, color = "B"))
+
+make.aggregation(df, freq = 24, fun = mean) -> df.daily.mean
+make.aggregation(df, freq = 24, fun = max) -> df.daily.max
+```
+
+
+```{r}
+ggplot()+
+  geom_line(aes(x = df$time, y = df$A, color = "A"))+
+  geom_point(aes(x = df$time, y = df$A, color = "A"))+
+  geom_point(aes(x = df.daily.mean$dates, y = df.daily.mean$A, color = "A.daily.mean"))+
+  geom_line(aes(x = df.daily.mean$dates, y = df.daily.mean$A, color = "A.daily.mean"))
+```
+
+```{r}
+ggplot()+
+  geom_line(aes(x = df$time, y = df$A, color = "A"))+
+  geom_point(aes(x = df$time, y = df$A, color = "A"))+
+  geom_point(aes(x = df.daily.max$dates, y = df.daily.max$A, color = "A.daily.max"))+
+  geom_line(aes(x = df.daily.max$dates, y = df.daily.max$A, color = "A.daily.max"))
+```
+
+
+```{r}
+
+ts <- ts(df, frequency = 24)
+ts <- aggregate.ts(ts, nfrequency = 1, mean)
+
+cbind(dates = df[seq(1,nrow(df), 24),1],
+      as.data.frame(ts[,2:ncol(ts)]))
+
+
+if (nrow(ts)==1){
+    df <- as.data.frame(t(ts[,2:ncol(ts)]))
+}else{
+}
+
+
+make.aggregation(df, freq = 24, fun = mean)
+
+```
+
+
+

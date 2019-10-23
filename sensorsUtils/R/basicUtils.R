@@ -14,16 +14,17 @@
 #' @import utils
 fortify.col <- function(df, fInterval=NULL, by){
   if (missing(fInterval)){
-    fInterval = c(head(df$dates,1), tail(df$dates,1))
+    fInterval = c(head(df[,1],1), tail(df[,1],1))
   }
   start = fInterval[1]
   end   = fInterval[2]
   seq(start, end, by = by) %>% as.data.frame() -> canonical.df
   canonical.df$VAL <- NA
-  colnames(canonical.df) <- c("dates", "VAL")
+#  colnames(canonical.df) <- c("dates", "VAL")
 
-  df <- df[df$dates>=start & df$dates<=end,]
-  col.fortified <- merge(df, canonical.df, by = "dates", all.y = T)[,c(1:ncol(df))]
+  df <- df[df[,1]>=start & df[,1]<=end,]
+  print(fInterval)
+  col.fortified <- merge(df, canonical.df, by = 1, all.y = T)[,c(1:ncol(df))]
   return(col.fortified)
 }
 
@@ -170,16 +171,16 @@ make.aggregation<-function(df, freq, fun){
   ts <- ts(df, frequency = freq)
   ts <- aggregate.ts(ts, nfrequency = 1, FUN = fun)
 
-  if (nrow(ts)==1){
-    df <- as.data.frame(t(ts[,2:ncol(ts)]))
-  }else{
-    df <- as.data.frame(ts[,2:ncol(ts)])
-  }
+  cbind(dates = df[seq(1,nrow(df), freq),1],
+        as.data.frame(ts[,2:ncol(ts)])) -> df
   return(df)
 }
 
 
 
-compress.df<-function(){
-
+compress.df<-function(df, order){
+  compress<-df[,2] %>% ts(frequency =1) %>% ma(order)
+  compress<-data.frame(dates = df[,1], values = as.numeric(compress))
+  compress<-compress[seq(1,nrow(compress),order),]
+  return(compress)
 }
