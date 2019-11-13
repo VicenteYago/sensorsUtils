@@ -174,14 +174,19 @@ make.aggregation<-function(df, freq, fun){
 
   dates = df[seq(1,nrow(df), freq),1]
 
+  res <- NULL
   if(length(dates) == 1){
     cbind(dates = dates,
-          as.data.frame(t(ts[,2:ncol(ts)]))) %>% return()
+          as.data.frame(t(ts[,2:ncol(ts)]))) -> res
   }else{
     cbind(dates = dates,
-          as.data.frame(ts[,2:ncol(ts)])) %>% return()
+          as.data.frame(ts[,2:ncol(ts)])) -> res
   }
 
+  if(ncol(res) == 2){
+    colnames(res)[2] <- colnames(df)[2]
+  }
+  return(res)
 }
 
 compress.df<-function(df, order){
