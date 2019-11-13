@@ -16,7 +16,10 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(sensorsUtils)
+library(tidyverse)
 ```
+
+En esta viñeta, se expican la motivación y funcionamineto de las funciones más importantes del paquete 'sensorsUtils'
 
 
 ## PERDIDAS SILENCIOSAS
@@ -74,60 +77,40 @@ fortify_df(list(df.A, df.B, df.C), by = "hour")
 
 ## AGREGACION PRECISA
 
-```{r}
-fA <- as.POSIXct("2019/01/01")
-fB <- as.POSIXct("2019/01/02")
-library(forecast)
+Una de las operaciones más frecuentes es la agregación de datos en un intervalo dado (horas, días, semanas ...)
+En el siguiente ejemplo se ha creado un dataframe con un frecuencia horaria, 48 horas en total:
 
-n = 24*10
+```{r}
+n = 24*2
 data.frame(time = seq(fA, by = "1 hour", length.out = n),
            A = cumsum(sample(c(-1, 1), n, TRUE)),
            B = cumsum(sample(c(-1, 1), n, TRUE)) ) -> df
+df
+```
 
-ggplot(df)+
-  geom_line(aes(x = time, y = A, color = "A"))+
-  geom_line(aes(x = time, y = B, color = "B"))
 
+Con la función 'make.aggregation', podemos agregar los datos de forma diaria, introduciendo freq = 24, la agregación se realiza con la función proporcionada por el usuario:
+
+```{r}
 make.aggregation(df, freq = 24, fun = mean) -> df.daily.mean
+df.daily.mean
 make.aggregation(df, freq = 24, fun = max) -> df.daily.max
+df.daily.max
 ```
 
+Para agregar en otro intervalo, simplemente hay que ajustar 'freq':
 
 ```{r}
-ggplot()+
-  geom_line(aes(x = df$time, y = df$A, color = "A"))+
-  geom_point(aes(x = df$time, y = df$A, color = "A"))+
-  geom_point(aes(x = df.daily.mean$dates, y = df.daily.mean$A, color = "A.daily.mean"))+
-  geom_line(aes(x = df.daily.mean$dates, y = df.daily.mean$A, color = "A.daily.mean"))
+# 2 Horas
+make.aggregation(df, freq = 2, fun = mean)
 ```
 
 ```{r}
-ggplot()+
-  geom_line(aes(x = df$time, y = df$A, color = "A"))+
-  geom_point(aes(x = df$time, y = df$A, color = "A"))+
-  geom_point(aes(x = df.daily.max$dates, y = df.daily.max$A, color = "A.daily.max"))+
-  geom_line(aes(x = df.daily.max$dates, y = df.daily.max$A, color = "A.daily.max"))
+# 2 Dias
+make.aggregation(df, freq = 48, fun = mean)
 ```
 
 
-```{r}
-
-ts <- ts(df, frequency = 24)
-ts <- aggregate.ts(ts, nfrequency = 1, mean)
-
-cbind(dates = df[seq(1,nrow(df), 24),1],
-      as.data.frame(ts[,2:ncol(ts)]))
-
-
-if (nrow(ts)==1){
-    df <- as.data.frame(t(ts[,2:ncol(ts)]))
-}else{
-}
-
-
-make.aggregation(df, freq = 24, fun = mean)
-
-```
 
 
 

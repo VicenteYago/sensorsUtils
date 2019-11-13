@@ -20,10 +20,8 @@ fortify.col <- function(df, fInterval=NULL, by){
   end   = fInterval[2]
   seq(start, end, by = by) %>% as.data.frame() -> canonical.df
   canonical.df$VAL <- NA
-#  colnames(canonical.df) <- c("dates", "VAL")
 
   df <- df[df[,1]>=start & df[,1]<=end,]
-  print(fInterval)
   col.fortified <- merge(df, canonical.df, by = 1, all.y = T)[,c(1:ncol(df))]
   return(col.fortified)
 }
@@ -57,7 +55,9 @@ fortify.col <- function(df, fInterval=NULL, by){
 #' fortify_df(df=df.simple, by="hour")
 #'
 #' #Multiple column dataframe with silent lost observations
-#' df.complex <- data.frame(dates = dates[-(sample(1:25,5))], A = 1:20, B = LETTERS[1:20], C = rnorm(1:20))
+#' df.complex <- data.frame(dates = dates[-(sample(1:25,5))],
+#'                          A = 1:20, B = LETTERS[1:20],
+#'                          C = rnorm(1:20))
 #' fortify_df(df=df.complex, by="hour")
 #'
 #' # Multiple datafrems with silent lost observations
@@ -67,6 +67,7 @@ fortify.col <- function(df, fInterval=NULL, by){
 #' fortify_df(list(df.A, df.B, df.C), by = "hour")
 #' @importFrom magrittr %>%
 #' @import utils
+#'
 fortify_df<-function(df, fInterval, by, names){
 
   if (class(df) == "list"){
@@ -115,7 +116,7 @@ fortify_df<-function(df, fInterval, by, names){
 #'@importFrom stats ts
 #'@export
 compress.col<-function(df, order){
-  compress<-df[,2] %>% ts(frequency =1) %>% ma(order)
+  compress<-df[,2] %>% stats::ts(frequency =1) %>% forecast::ma(order)
   compress<-data.frame(dates = df[,1], values = as.numeric(compress))
   compress<-compress[seq(1,nrow(compress),order),]
   return(compress)
@@ -168,18 +169,23 @@ compress.col<-function(df, order){
 #'               B = rep(1:3,each=24))
 #'make.aggregation(df, freq = 12, mean)
 make.aggregation<-function(df, freq, fun){
-  ts <- ts(df, frequency = freq)
-  ts <- aggregate.ts(ts, nfrequency = 1, FUN = fun)
+  ts <- stats::ts(df, frequency = freq)
+  ts <- stats::aggregate.ts(ts, nfrequency = 1, FUN = fun)
 
-  cbind(dates = df[seq(1,nrow(df), freq),1],
-        as.data.frame(ts[,2:ncol(ts)])) -> df
-  return(df)
+  dates = df[seq(1,nrow(df), freq),1]
+
+  if(length(dates) == 1){
+    cbind(dates = dates,
+          as.data.frame(t(ts[,2:ncol(ts)]))) %>% return()
+  }else{
+    cbind(dates = dates,
+          as.data.frame(ts[,2:ncol(ts)])) %>% return()
+  }
+
 }
 
-
-
 compress.df<-function(df, order){
-  compress<-df[,2] %>% ts(frequency =1) %>% ma(order)
+  compress<-df[,2] %>% stats::ts(frequency =1) %>% forecast::ma(order)
   compress<-data.frame(dates = df[,1], values = as.numeric(compress))
   compress<-compress[seq(1,nrow(compress),order),]
   return(compress)

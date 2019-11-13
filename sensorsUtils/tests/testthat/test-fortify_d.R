@@ -39,6 +39,6 @@ test_that("basic test3", {
 
   res <-fortify_df(df = list(df.A, df.B, df.C, df.D),
                    fInterval = c(start, end),
-                   by = "hour", names = c("A","B","C","D"))
+                   by = "hour")
   expect_equal(25, nrow(res))
 })

@@ -39,7 +39,9 @@ df.simple <- data.frame(dates = dates[-(sample(1:25,5))], values=rep(1,20))
 fortify_df(df=df.simple, by="hour")
 
 #Multiple column dataframe with silent lost observations
-df.complex <- data.frame(dates = dates[-(sample(1:25,5))], A = 1:20, B = LETTERS[1:20], C = rnorm(1:20))
+df.complex <- data.frame(dates = dates[-(sample(1:25,5))],
+                         A = 1:20, B = LETTERS[1:20],
+                         C = rnorm(1:20))
 fortify_df(df=df.complex, by="hour")
 
 # Multiple datafrems with silent lost observations
